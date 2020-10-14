@@ -36,6 +36,7 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.InvalidKeyException;
 import javax.annotation.Resource;
+import javax.validation.constraints.Email;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import ntnu.no.oblig1h2v2.resources.DatasourceProducer;

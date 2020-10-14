@@ -80,7 +80,6 @@ public class FantService {
     }
     @GET
     @Path("items")
-    @RolesAllowed({Group.USER /*Group.AMIN?*/})
     public List<Item> getItems(){
         return em.createNamedQuery(Item.FIND_ALL_ITEMS,Item.class).getResultList();
     }
@@ -94,8 +93,9 @@ public class FantService {
         User customer = authService.getCurrentUser();
         if(item != null){
             if(item.getCustomer() == null){
-                item.setCustomer(customer);
-                
+                System.out.println("JAMAND");
+                item.setSold(true);
+                item.setCustomer(customer);             
                 String purchaseId = UUID.randomUUID().toString();
                 Purchases purchase = new Purchases(purchaseId, customer, item);
                 em.merge(purchase);
@@ -115,12 +115,12 @@ public class FantService {
     @RolesAllowed({Group.USER})
     public Response deleteItem(@QueryParam("itemid") long itemid){
         Item item = em.find(Item.class, itemid);
-        User user = this.getCurrentUser();
+        User user = em.find(User.class, sc.getUserPrincipal().getName());
         if(item != null){
-            if(item.getSeller().getUserid().equals(user.getUserid())){
+            //if(item.getSeller().getUserid().equals(user.getUserid())){
                 em.remove(item);
                 return Response.ok(item).build();
-            }
+           // }
         }
         return Response.notModified().build();
     }
@@ -142,6 +142,7 @@ public class FantService {
 //        try{
             User user = em.find(User.class, sc.getUserPrincipal().getName());
             item = new Item(title,description,user,price);
+            
 //            List<FormDataBodyPart> images = multiPart.getFields("image");
 //            if(images != null){
 //                for(FormDataBodyPart part : images){

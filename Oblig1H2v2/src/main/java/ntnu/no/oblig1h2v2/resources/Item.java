@@ -29,7 +29,7 @@ import static ntnu.no.oblig1h2v2.resources.Item.FIND_ALL_ITEMS;
 @Entity
 @Data
 @AllArgsConstructor
-@NamedQuery(name = FIND_ALL_ITEMS, query = "select i from Item i")
+@NamedQuery(name = FIND_ALL_ITEMS, query = "select i from Item i where i.sold = false")
 public class Item extends AbstractDomain{
     public static final String FIND_ALL_ITEMS = "Item.findAllUsers";
     
@@ -37,6 +37,9 @@ public class Item extends AbstractDomain{
     private Long id;
     
     String title;
+    
+    @Column
+    boolean sold;
     
     String price;
     
@@ -51,7 +54,7 @@ public class Item extends AbstractDomain{
     @JsonbTypeAdapter(MediaObjectAdapter.class)
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     List<MediaObject> photos;
-    
+  
     
     protected Item(){}
     
@@ -60,11 +63,16 @@ public class Item extends AbstractDomain{
         this.description = description;
         this.seller = seller;
         this.price = price;
+        this.sold = false;
     }
     
     public long getId(){
         return id;
     }
+    
+   public void setSold(boolean sold){
+       this.sold = sold;
+   }
     
     public void addPhoto(MediaObject photo){
         if(this.photos == null){
